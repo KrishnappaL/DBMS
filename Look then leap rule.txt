@@ -1,0 +1,72 @@
+1)There are nodes in an undirected graph, and a number of edges connecting some nodes. In each edge, the first value will be between and , inclusive. The second node will be between and , inclusive. Given a list of edges, determine the size of the smallest and largest connected components that have or more nodes. A node can have any number of connections. The highest node value will always be connected to at least
+
+other node.
+
+Note Single nodes should not be considered in the answer. 
+
+public static List<Integer> componentsInGraph(List<List<Integer>> gb) {
+        Map<Integer, Set<Integer>> map = new HashMap<>();
+        for(List<Integer> line : gb) {
+            int p1 = line.get(0);
+            int p2 = line.get(1);
+            Set<Integer> s1 = map.get(p1);
+            Set<Integer> s2 = map.get(p2);
+            if(s1 == null || s2 == null) {
+                Set<Integer> s = (s1 == null) ? s2 : s1;
+                if(s == null) {
+                    s = new HashSet<>();
+                }
+                s.add(p1);
+                s.add(p2);
+                map.put(p1, s);
+                map.put(p2, s);
+            } else {
+                if(s1 != s2) {
+                    s1.addAll(s2);
+                    for(int i: s2) {
+                        map.put(i, s1);
+                    }
+                    map.put(p2, s1);
+                }
+            }
+        }
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        for(Set<Integer> s: map.values()) {
+            min = Math.min(min, s.size());
+            max = Math.max(max, s.size());
+        }
+        return Arrays.asList(min, max);
+    }
+
+2)You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
+
+Find two lines that together with the x-axis form a container, such that the container contains the most water.
+
+Return the maximum amount of water a container can store.
+
+Notice that you may not slant the container.
+Input: height = [1,8,6,2,5,4,8,3,7]
+Output: 49
+Explanation: The above vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this case, the max area of water (blue section) the container can contain is 49.
+
+Example 2:
+
+Input: height = [1,1]
+Output: 1
+class Solution {
+    public int maxArea(int[] height) {
+        int left=0,right=height.length-1,maxArea=0;
+        while(left<right){
+           int currArea= Math.min(height[left],height[right])*(right-left);
+           maxArea=Math.max(maxArea,currArea);
+           if(height[left]<height[right]){
+            left++;
+           }
+           else{
+            right--;
+           }
+        }
+        return maxArea;
+    }
+}
