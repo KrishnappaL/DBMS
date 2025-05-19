@@ -1,0 +1,216 @@
+Database - collection of data
+RDBMS - Relational DBMS,It's a paradigm .Relating more than one DB.
+Query Language -update,delete 
+Oracle provided the idea ,that is SQL
+SQL types - Oracle,MySQL,Microsoft SQL server,SQlite(Mobile DB),IBM DB2,PostgreSQL.
+
+Backend and DB connection types 
+PHP and SQL,Java and oracle,python and SQlite,MS SQL and C# .net,DB2 and Mainframe
+
+Postgre SQL - Open Source Relational DB.Developed based on ORDBMS 
+
+ORDBMS - 
+	Object,OOP is included on ORDBMS,also includes all RDBMS concept,Handle complex data.
+
+DBMS 				VS 	RDBMS
+Stores files				Store in table format
+ex:files(xml,pdf,docs ...)		Relation present between table (ex:PostgreSQL,MySQL)
+No-Normalization allowed		Normalization allowed 
+
+Note:NoSQl(Non SQL) ,Non-Relational DBMS .ex-video,audio,text.Can't store table format.
+	Non tabular DB.ex-document,graph,key-value pair etc
+	
+SQL divided as 4 categories:
+1. Data Definition Language(DDL)-create,alter,drop,truncate
+2. Data Manipulation Language(DML) - Select,Insert,Update,Delete
+3. Transaction Control Language(TCL) - commit,rollback,savepoint(set a save point in transaction),set transaction(set properties for tranaction)
+4.Data Control Language - Grant(give permission to user),Revoke(remove user permission)
+=====================================================================================================================
+POSTGRESS SYNTAX
+
+sudo apt-get install postgresql
+1) sudo -i -u postgres
+2) psql 
+command line tool ,help ti=o manage postgresql
+3) \l 
+List the database
+4) create database databasename;
+ex- create database college;
+5) alter database college rename to students;
+6)drop database students;
+7)\connect 
+connect to database like connect to internet
+8)create table student_details(s_no int,name varchar)
+9)/d student_details
+display student_details table
+10)/select ->Retrieves rows from a table
+11)/h ->help
+12)\q -exit database;
+13)select version();
+14)select current_date;
+15)select current_time;
+16)select 5+10-2;
+
+Data Definition Language(DDL) 
+-----------------------------------------------------
+		MovieDB
+1) create database movieDB;
+2)\c movied=DB;  //connect to MovieDB as user postgres
+3)create table tablename( name datatype,name2 datatype,....);
+create table movie(movie_name varchar(20),release_date date,ticket int);
+
+Note: varchar -varying character,int or integer or numeric ->all are used to represent numbers,
+	No space between neme but underscore can be used.
+4)\dt   //Providing description by displaying tables with name.
+5)\d tablename;
+\d movieDB;
+create table contacts(mobile_ni int not null,name text not null);
+create table product(price_id int,price int check (price>0));  //Check -condition 
+create table prod1 (prod_no int,name text,price numeric constraint positive_price check (price>0));
+create table prod3(prod_no int,name text,price int check(price>0),discounted_price int check (discounted_price>0),check (price>discounted_price));
+create table cont_app(name varchar(20) unique,contact_no numeric unique);
+
+ 
+Alter table:-
+1)alter table table_name add column_name datatype;
+ex: alter table movieDB add column release_years int;
+2)alter table movieDB rename column mov_name to movie_name;
+3)alter table movieDB drop column movie_name;
+4)alter table movieDB add check (actor in ('vijay','sudeep','ajith'));
+5)alter table movieDB alter column mov_name type smallint;
+
+		Indexing -speed up searching database
+clustered(group) index-contents of phonebook,one clusteredindex for one table.
+1. explain select * from employee; //explain time needed
+2. create index customer_name on customers(customers_name);
+
+Data Manipulation Language(DML)
+============================================================
+	Insertion
+insert into table_name values(, , , );
+
+examples:
+1. insert into contact values(null,null);  //error
+2. insert into contacts values("sabari",12345);
+3. insert into player values(210,2,'30-03-2023'),(210,2,'30-03-2023'),(210,2,'30-03-2023');
+4.insert into students(s_name) values ('lakshmi');
+5 insert into customers(cus_name) values ('raj'),('tada');
+
+serial-in postgresql we use serial instead of autoincrement
+ex- create table students(s_id int serial,s_name text);
+
+Drop (table,database remove entire structure) and delete
+drop  table table_name;
+1)drop table movieDb;
+2. drop table if trainee exists;
+3. drop table if exists trainee;
+4)delete from emp where empid=123;
+5)delete from emp where designation='team lead' or empid=101;
+6)delete fom emp;  		//all deleted on table
+7)delete from customers where cust_id=1;
+
+Truncate-entire data ,but structure will remain(value delete)
+=======
+1)truncate contacts;
+
+unique-unique key for multiple columns
+======
+create table mobile(epm_id int,sim_no int,price int,unique(emp_no int,sim_no int));
+
+union: combine both
+=====
+select player_id from team union select player_id from player;
+select player_id from team union all select player_id from player;  //gave duplicates
+select player_id from team union all select player_id from player order by player_id;
+
+Intersect
+========
+select player_id from team inr iotersect select player_id from player;
+
+UPDATE	
+======
+1. update emp set empid=123 where designation='senior software engineer';
+2. update employee set designation="senior manager",salary=5000 where name='Ezhil';
+
+	SELECT
+1. SELECT * FROM EMP ORDER BY SALARY; //ASCENDING ORDER
+2. SELECT * FROM EMP ORDER BY desc;
+3) select * from emp order by desc limit 3;
+4. select * from emp order by salary ,name; //name is second preference
+5. select * from emp order by salary asc,name desc;
+6. select * from emp fetch first 3 rows only;
+7. select * from emp where name like 'M%'; //starts from M
+8. select * from emp where name like '_a%';  //a is second letter
+9. select * from emp where name like 'M___'; //only 4 letters word
+10. select * from emp where name like '%i'; //last letter is i
+11. select * form emp where name like '%th%';
+12. select * from emp where name='mugilan' and designation='team lead';
+13. select movie_name as movie,release-date as released ,ticket as fare from movie; // as ->change the column name
+14. select distinct * from movie; //distinct -> remove duplicates on row
+15. select * from movie where movie_name!=saho;
+
+	Aggregate function
+	===================
+1. select min(salary) from emp;
+2. select max(salary) from emp;
+3. select avg(salary) from emp;
+4. select round(avg(salary),2) from emp;
+5. select round(avg(salary)) from emp;
+6. select count(*) from emp;
+7. select sum(salary) from emp;
+8. select row_number() over() from emp;  //display row numebers
+9. 
+
+	Between funtion
+	===============
+1. select  * from emp where salary between 1800 and 4000;
+2. select name from emp where (name like 'A%' or name like 'M%');
+3. select * from emp where not name like 'A%' and name like 'M%';
+4. select * from emp where not name like 'A%' or name like 'M%';
+5. select * from emp where name like '_a%' and name like 'K%';
+
+	Sub-Query(in)
+	===========
+1. select name from emp where salary=(select min(salry) from emp);
+2. select name,salary from emp where salary=(select max(salary) from emp);
+3. select name from emp order by salary desc limit 5;
+4. select max(salary) from emp where salary not in(select max(salary) from emp);
+5. select name from emp where salary=(select max(salary) from emp where salary not in(selct max(salary) from emp));
+
+	Group By(Aggregate function is group by,only used with aggregate function)
+	========
+1. select round(avg(salary)),dept from emp group by dept;
+2. select sum(salary),dept from emp group by dept;
+3. select designation,round(avg(salary)) from emp group by designation;
+4. select count(name),designation from emp group by designation order by designation; //order by desc;
+5. select count(name),designation from emp group by drsignation order by count(name);
+6. select count(name),designation from emp group by designation having count(name)>=2;		//having
+
+	Join(connecting more than one table)
+	====================================
+1. select team.team_id,player.player_id,player.player_name from team inner join player on team.player_id=player.player_id;
+2.select p.player_id from player p join team t on p.player_id=t.player_id;
+3. select * from team inner join player on team.player_id=player.player_id;
+
+		View-Virtual table created or temporary table
+		=============================================
+table - independent object
+view - dependent on table
+
+	Transaction Control Language(TCL)
+	===================================
+commit - like save after all tasks complete
+rollback - undo or revert
+
+Primary key-unique and not null.A key which uniquely identifies a row
+===========
+1. create table products(prod_no int primary key,name text);
+2. create table example(a int,b int,c int,primary key(a,c));
+3. create table example(a int primary key,c int primary key); //error multiple primary keep
+
+Primary key-unique ,not null,act as secondary key in other table also called foreign key
+unique key- accept null value
+
+	
+	
+
